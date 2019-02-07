@@ -9,8 +9,8 @@ case "${unameOut}" in
   *)          echo "Unknown platform: ${unameOut}" && exit 1
 esac
 
-echo $(pwd)
 curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_SDK_VERSION}-${OS_ARCH}-x86_64.tar.gz | tar -xz
-cat terraform.tfvars
-cat zzz_backend_config.tf.json
-echo $(ls ./google-cloud-sdk/bin)
+
+chmod +x ./google-cloud-sdk/bin/gcloud
+chmod +x ./google-cloud-sdk/bin/bq
+chmod +x ./google-cloud-sdk/bin/gsutil
