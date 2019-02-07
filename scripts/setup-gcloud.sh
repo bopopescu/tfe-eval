@@ -10,5 +10,3 @@ case "${unameOut}" in
 esac
 
 curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_SDK_VERSION}-${OS_ARCH}-x86_64.tar.gz | tar -xz
-
-./google-cloud-sdk/bin/gcloud
