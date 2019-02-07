@@ -8,7 +8,7 @@ variable "gcloud_components" {
 
 locals {
   gcloud_installer_script = "${path.module}/scripts/setup-gcloud.sh"
-  gcloud_bin_path = "${path.module}/google-cloud-sdk/bin"
+  gcloud_bin_path = "./google-cloud-sdk/bin"
   gcloud = "${local.gcloud_bin_path}/gcloud"
 }
 
