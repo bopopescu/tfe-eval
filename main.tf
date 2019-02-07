@@ -14,8 +14,7 @@ locals {
 
 resource "null_resource" "gcloud_sdk" {
   triggers {
-    GCLOUD_SDK_VERSION = "${var.gcloud_sdk_version}"
-    INSTALLER_HASH = "${md5(file(local.gcloud_installer_script))}"
+    ALWAYS = "${uuid()}"
   }
 
   provisioner "local-exec" {
