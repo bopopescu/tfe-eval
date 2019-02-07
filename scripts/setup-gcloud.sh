@@ -11,6 +11,4 @@ esac
 
 curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_SDK_VERSION}-${OS_ARCH}-x86_64.tar.gz | tar -xz
 
-chmod +x ./google-cloud-sdk/bin/gcloud
-chmod +x ./google-cloud-sdk/bin/bq
-chmod +x ./google-cloud-sdk/bin/gsutil
+./google-cloud-sdk/bin/gcloud

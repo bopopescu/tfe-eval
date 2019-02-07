@@ -27,6 +27,7 @@ resource "null_resource" "gcloud_sdk" {
 }
 
 resource "null_resource" "gcloud_components" {
+  depends_on = ["null_resource.gcloud_sdk"]
   count = "${length(var.gcloud_components)}"
 
   provisioner "local-exec" {
