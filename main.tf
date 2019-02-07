@@ -31,7 +31,7 @@ resource "null_resource" "gcloud_components" {
   count = "${length(var.gcloud_components)}"
 
   provisioner "local-exec" {
-    command = "${local.gcloud} components install ${var.gcloud_components[count.index]}"
+    command = "${local.gcloud} components install ${var.gcloud_components[count.index]} -q"
   }
 }
 
