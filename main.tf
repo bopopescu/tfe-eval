@@ -1,41 +1,30 @@
-variable "gcloud_sdk_version" {
-  default = "232.0.0"
-}
-
 variable "gcloud_components" {
   default = ["kubectl", "beta"]
 }
 
+variable "platform" {
+  default = "linux"
+}
+
 locals {
-  gcloud_installer_script = "${path.module}/scripts/setup-gcloud.sh"
-  gcloud_bin_path = "./google-cloud-sdk/bin"
+  gcloud_bin_path = "${path.module}/cache/${var.platform}/google-cloud-sdk/bin"
   gcloud = "${local.gcloud_bin_path}/gcloud"
 }
 
-resource "null_resource" "gcloud_sdk" {
-  triggers {
-    // ALWAYS = "${uuid()}"
-  }
-
-  provisioner "local-exec" {
-    command = "${local.gcloud_installer_script}"
-    environment {
-      GCLOUD_SDK_VERSION = "${var.gcloud_sdk_version}"
-    }
-  }
-}
-
 resource "null_resource" "gcloud_components" {
-  depends_on = ["null_resource.gcloud_sdk"]
   count = "${length(var.gcloud_components)}"
 
   triggers {
-    // ALWAYS = "${uuid()}"
+    components = "${join(",", var.gcloud_components)}"
   }
 
   provisioner "local-exec" {
     command = "${local.gcloud} components install ${var.gcloud_components[count.index]} -q"
   }
+}
+
+output "_triggers" {
+  value = "${null_resource.gcloud_components.*.triggers}"
 }
 
 output "gcloud" {
