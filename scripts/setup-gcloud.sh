@@ -11,3 +11,5 @@ esac
 
 echo $(pwd)
 curl -sL https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-${GCLOUD_SDK_VERSION}-${OS_ARCH}-x86_64.tar.gz | tar -xz
+echo $(ls)
+echo $(ls ./google-cloud-sdk/)
