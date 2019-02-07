@@ -7,6 +7,7 @@ variable "gcloud_components" {
 }
 
 locals {
+  gcloud_installer_script = "./scripts/setup-gcloud.sh"
   gcloud_bin_path = "${path.module}/google-cloud-sdk/bin"
   gcloud = "${local.gcloud_bin_path}/gcloud"
 }
@@ -14,10 +15,11 @@ locals {
 resource "null_resource" "gcloud_sdk" {
   triggers {
     GCLOUD_SDK_VERSION = "${var.gcloud_sdk_version}"
+    INSTALLER_HASH = "${md5(file(local.gcloud_installer_script))}"
   }
 
   provisioner "local-exec" {
-    command = "./scripts/setup-gcloud.sh"
+    command = "${local.gcloud_installer_script}"
     environment {
       GCLOUD_SDK_VERSION = "${var.gcloud_sdk_version}"
     }
