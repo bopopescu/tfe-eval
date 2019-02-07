@@ -8,8 +8,11 @@ variable "gcloud_components" {
 
 locals {
   gcloud_installer_script = "${path.module}/scripts/setup-gcloud.sh"
+  components = "${join(" ", var.gcloud_components)}"
   gcloud_bin_path = "./google-cloud-sdk/bin"
   gcloud = "${local.gcloud_bin_path}/gcloud"
+  bq = "${local.gcloud_bin_path}/bq"
+  gsutil = "${local.gcloud_bin_path}/gsutil"
 }
 
 resource "null_resource" "gcloud_sdk" {
@@ -27,29 +30,28 @@ resource "null_resource" "gcloud_sdk" {
 
 resource "null_resource" "gcloud_components" {
   depends_on = ["null_resource.gcloud_sdk"]
-  count = "${length(var.gcloud_components)}"
 
   triggers {
-    // ALWAYS = "${uuid()}"
+    hash = "${md5(local.components)}"
   }
 
   provisioner "local-exec" {
-    command = "${local.gcloud} components install ${var.gcloud_components[count.index]} -q"
+    command = "${local.gcloud} components install ${local.components} -q"
   }
 }
 
 output "gcloud" {
-  value = "${local.gcloud}"
+  value = "${length(null_resource.gcloud_components.*.triggers) > 0 ? local.gcloud : local.gcloud}"
 }
 
 output "bq" {
-  value = "${local.gcloud_bin_path}/bq"
+  value = "${length(null_resource.gcloud_components.*.triggers) > 0 ? local.bq : local.bq}"
 }
 
 output "gsutil" {
-  value = "${local.gcloud_bin_path}/gsutil"
+  value = "${length(null_resource.gcloud_components.*.triggers) > 0 ? local.gsutil : local.gsutil}"
 }
 
 output "gcloud_bin_path" {
-  value = "${local.gcloud_bin_path}"
+  value = "${length(null_resource.gcloud_components.*.triggers) > 0 ? local.gcloud_bin_path : local.gcloud_bin_path}"
 }
