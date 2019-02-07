@@ -14,7 +14,7 @@ locals {
 
 resource "null_resource" "gcloud_sdk" {
   triggers {
-    ALWAYS = "${uuid()}"
+    // ALWAYS = "${uuid()}"
   }
 
   provisioner "local-exec" {
@@ -30,7 +30,7 @@ resource "null_resource" "gcloud_components" {
   count = "${length(var.gcloud_components)}"
 
   triggers {
-    ALWAYS = "${uuid()}"
+    // ALWAYS = "${uuid()}"
   }
 
   provisioner "local-exec" {
