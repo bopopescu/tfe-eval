@@ -1,28 +1,49 @@
-variable "google_cloud_sdk_version" {
+variable "gcloud_sdk_version" {
   default = "232.0.0"
 }
 
-resource "null_resource" "google_cloud_sdk" {
+variable "gcloud_components" {
+  default = ["kubectl", "beta"]
+}
+
+locals {
+  gcloud_bin_path = "${path.module}/google-cloud-sdk/bin"
+  gcloud = "${local.gcloud_bin_path}/gcloud"
+}
+
+resource "null_resource" "gcloud_sdk" {
   triggers {
-    GOOGLE_CLOUD_SDK_VERSION = "${var.google_cloud_sdk_version}"
+    GCLOUD_SDK_VERSION = "${var.gcloud_sdk_version}"
   }
 
   provisioner "local-exec" {
     command = "./scripts/setup-gcloud.sh"
     environment {
-      GOOGLE_CLOUD_SDK_VERSION = "${var.google_cloud_sdk_version}"
+      GCLOUD_SDK_VERSION = "${var.gcloud_sdk_version}"
     }
   }
 }
 
+resource "null_resource" "gcloud_components" {
+  count = "${length(var.gcloud_components)}"
+
+  provisioner "local-exec" {
+    command = "${local.gcloud} components install ${var.gcloud_components[count.index]}"
+  }
+}
+
 output "gcloud" {
-  value = "${path.module}/google-cloud-sdk/bin/gcloud"
+  value = "${local.gcloud}"
 }
 
 output "bq" {
-  value = "${path.module}/google-cloud-sdk/bin/bq"
+  value = "${local.gcloud_bin_path}/bq"
 }
 
 output "gsutil" {
-  value = "${path.module}/google-cloud-sdk/bin/gsutil"
+  value = "${local.gcloud_bin_path}/gsutil"
+}
+
+output "gcloud_bin_path" {
+  value = "${local.gcloud_bin_path}"
 }
