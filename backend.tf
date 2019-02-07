@@ -1,10 +1,10 @@
-terraform {
-  backend "remote" {
-    hostname = "app.terraform.io"
-    organization = "google-pso"
+// terraform {
+//   backend "remote" {
+//     hostname = "app.terraform.io"
+//     organization = "google-pso"
 
-    workspaces {
-      prefix = "tfe-eval-"
-    }
-  }
-}
+//     workspaces {
+//       prefix = "tfe-eval-"
+//     }
+//   }
+// }

@@ -1,33 +1,28 @@
-resource "null_resource" "setup-gcloud" {
+variable "google_cloud_sdk_version" {
+  default = "232.0.0"
+}
+
+resource "null_resource" "google_cloud_sdk" {
   triggers {
-    _always_run = "${uuid()}"
+    GOOGLE_CLOUD_SDK_VERSION = "${var.google_cloud_sdk_version}"
   }
 
   provisioner "local-exec" {
     command = "./scripts/setup-gcloud.sh"
+    environment {
+      GOOGLE_CLOUD_SDK_VERSION = "${var.google_cloud_sdk_version}"
+    }
   }
 }
 
-resource "null_resource" "gcloud-version" {
-  depends_on = ["null_resource.setup-gcloud"]
-
-  triggers {
-    _always_run = "${uuid()}"
-  }
-
-  provisioner "local-exec" {
-    command = "./google-cloud-sdk/bin/gcloud --version"
-  }
+output "gcloud" {
+  value = "${path.module}/google-cloud-sdk/bin/gcloud"
 }
 
-resource "null_resource" "bq-version" {
-  depends_on = ["null_resource.setup-gcloud"]
+output "bq" {
+  value = "${path.module}/google-cloud-sdk/bin/bq"
+}
 
-  triggers {
-    _always_run = "${uuid()}"
-  }
-
-  provisioner "local-exec" {
-    command = "./google-cloud-sdk/bin/bq version"
-  }
+output "gsutil" {
+  value = "${path.module}/google-cloud-sdk/bin/gsutil"
 }
