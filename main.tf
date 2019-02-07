@@ -29,6 +29,10 @@ resource "null_resource" "gcloud_components" {
   depends_on = ["null_resource.gcloud_sdk"]
   count = "${length(var.gcloud_components)}"
 
+  triggers {
+    ALWAYS = "${uuid()}"
+  }
+
   provisioner "local-exec" {
     command = "${local.gcloud} components install ${var.gcloud_components[count.index]} -q"
   }
