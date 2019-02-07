@@ -9,22 +9,21 @@ variable "platform" {
 locals {
   gcloud_bin_path = "${path.module}/cache/${var.platform}/google-cloud-sdk/bin"
   gcloud = "${local.gcloud_bin_path}/gcloud"
+  components = "${join(" ", var.gcloud_components)}"
 }
 
 resource "null_resource" "gcloud_components" {
-  count = "${length(var.gcloud_components)}"
-
   triggers {
-    components = "${join(",", var.gcloud_components)}"
+    components = "${md5(local.components)}"
   }
 
   provisioner "local-exec" {
-    command = "${local.gcloud} components install ${var.gcloud_components[count.index]} -q"
+    command = "${local.gcloud} components install ${local.components} -q"
   }
 }
 
-output "_triggers" {
-  value = "${null_resource.gcloud_components.*.triggers}"
+output "hash" {
+  value = "${null_resource.gcloud_components.triggers.components}"
 }
 
 output "gcloud" {
