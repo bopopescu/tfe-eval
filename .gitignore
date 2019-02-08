@@ -2,4 +2,4 @@ terraform.tfvars
 terraform.tfstate
 .terraform
 terraform.tfstate.backup
-google-cloud-sdk
+./google-cloud-sdk
